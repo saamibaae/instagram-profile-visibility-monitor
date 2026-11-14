@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instagram Visibility Monitor</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-left">
+        <img src="../assets/icons/icon48.png" alt="Monitor Icon" class="app-logo">
+        <div>
+          <h1 class="app-title">Visibility Monitor</h1>
+          <p class="app-subtitle">Instagram Profile Accessibility</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="btn-open-settings" class="icon-button" title="Settings" aria-label="Settings">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Target Account Card -->
+    <div class="card target-card">
+      <div class="target-row">
+        <span class="label">Target:</span>
+        <a id="target-link" href="https://www.instagram.com/instagram/" target="_blank" class="target-username" rel="noopener noreferrer">@instagram</a>
+      </div>
+      <div class="status-badge-row">
+        <span class="status-indicator-dot" id="monitoring-dot"></span>
+        <span id="monitoring-status-text" class="status-text">Stopped</span>
+      </div>
+    </div>
+
+    <!-- Alert / Interruption Banner -->
+    <div id="interruption-banner" class="interruption-banner hidden">
+      <span class="banner-icon">⚠️</span>
+      <span id="interruption-text" class="banner-text">Monitoring interrupted: Dedicated tab was closed.</span>
+    </div>
+
+    <!-- Status Grid -->
+    <div class="status-grid">
+      <div class="status-item">
+        <span class="item-label">Current Observation</span>
+        <span id="current-obs-badge" class="badge badge-unknown">UNKNOWN</span>
+      </div>
+
+      <div class="status-item">
+        <span class="item-label">Telegram Status</span>
+        <span id="telegram-status" class="telegram-badge">Not configured</span>
+      </div>
+
+      <div class="status-item">
+        <span class="item-label">Last Reliable State</span>
+        <span id="last-reliable-state" class="item-value">—</span>
+      </div>
+
+      <div class="status-item">
+        <span class="item-label">Last Check Attempt</span>
+        <span id="last-attempt-time" class="item-value">—</span>
+      </div>
+
+      <div class="status-item">
+        <span class="item-label">Next Intended Check</span>
+        <span id="next-check-time" class="item-value">—</span>
+      </div>
+
+      <div class="status-item">
+        <span class="item-label">Last Transition</span>
+        <span id="last-transition-time" class="item-value">—</span>
+      </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="button-group primary-controls">
+      <button id="btn-start" class="btn btn-primary">Start Monitoring</button>
+      <button id="btn-pause" class="btn btn-secondary hidden">Pause</button>
+      <button id="btn-stop" class="btn btn-danger hidden">Stop</button>
+      <button id="btn-check-now" class="btn btn-secondary">Check Status</button>
+    </div>
+
+    <!-- Navigation / Secondary Controls -->
+    <div class="footer-actions">
+      <button id="btn-open-history" class="text-link">View Event History</button>
+      <span class="divider">•</span>
+      <span class="schedule-note" id="schedule-indicator">Interval: 3m</span>
+    </div>
+  </div>
+
+  <script src="popup.js" type="module"></script>
+</body>
+</html>

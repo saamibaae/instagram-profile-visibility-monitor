@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings — Instagram Visibility Monitor</title>
+  <link rel="stylesheet" href="settings.css">
+</head>
+<body>
+  <div class="settings-layout">
+    <header class="settings-header">
+      <div class="header-content">
+        <img src="../assets/icons/icon48.png" alt="Logo" class="logo">
+        <div>
+          <h1>Settings & Configuration</h1>
+          <p class="subtitle">Instagram Profile Visibility Monitor</p>
+        </div>
+      </div>
+      <a href="history.html" class="nav-link">View Event History →</a>
+    </header>
+
+    <!-- Notification Toast -->
+    <div id="toast" class="toast hidden"></div>
+
+    <main class="settings-main">
+      <!-- Target Configuration -->
+      <section class="settings-card">
+        <h2>Target Profile</h2>
+        <p class="card-desc">The Instagram profile to monitor for accessibility state changes.</p>
+
+        <div class="form-group">
+          <label for="input-target">Target Username or Profile URL</label>
+          <input type="text" id="input-target" placeholder="instagram" autocomplete="off" spellcheck="false">
+          <span class="field-hint">Default: <code>instagram</code>. Changing target resets the comparison baseline.</span>
+        </div>
+
+        <div class="form-group checkbox-group">
+          <label class="switch-label">
+            <input type="checkbox" id="check-auto-tab">
+            <span class="switch-text">Automatically open dedicated background tab if missing</span>
+          </label>
+        </div>
+      </section>
+
+      <!-- Monitoring Schedule -->
+      <section class="settings-card">
+        <h2>Monitoring Schedule</h2>
+        <p class="card-desc">Controls how frequently the extension checks profile accessibility.</p>
+
+        <div class="form-group">
+          <label for="select-interval">Observation Interval</label>
+          <select id="select-interval">
+            <option value="1">1 minute (High sensitivity, potential rate-limit risk)</option>
+            <option value="2">2 minutes</option>
+            <option value="3" selected>3 minutes (Recommended default)</option>
+            <option value="5">5 minutes</option>
+            <option value="10">10 minutes</option>
+            <option value="15">15 minutes</option>
+          </select>
+          <span class="field-hint">
+            <strong>Sampling note:</strong> Instagram accounts active for under 3 minutes may appear and disappear between polling intervals.
+          </span>
+        </div>
+      </section>
+
+      <!-- Telegram Notification System -->
+      <section class="settings-card">
+        <div class="card-title-row">
+          <h2>Telegram Notifications</h2>
+          <label class="switch-toggle">
+            <input type="checkbox" id="check-telegram-enabled" checked>
+            <span class="slider"></span>
+          </label>
+        </div>
+        <p class="card-desc">Receive real-time alerts on your phone or desktop when an observed visibility transition occurs.</p>
+
+        <div id="telegram-fields">
+          <div class="form-group">
+            <label for="input-bot-token">Telegram Bot Token</label>
+            <div class="password-wrapper">
+              <input type="password" id="input-bot-token" value="" placeholder="123456789:ABCdefGhIJKlmNoPQRsTUVwxyZ" autocomplete="off" spellcheck="false">
+              <button type="button" id="btn-toggle-token" class="btn-toggle-pass" aria-label="Toggle token visibility">👁</button>
+            </div>
+            <span class="field-hint">Issued by <a href="https://t.me/BotFather" target="_blank" rel="noopener noreferrer">@BotFather</a>. Stored only in local extension storage.</span>
+          </div>
+
+          <div class="form-group">
+            <label for="input-chat-id">Telegram Chat ID</label>
+            <input type="text" id="input-chat-id" value="" placeholder="e.g. 123456789" autocomplete="off" spellcheck="false">
+            <span class="field-hint">Your personal numeric Telegram ID (from <a href="https://t.me/userinfobot" target="_blank" rel="noopener noreferrer">@userinfobot</a>).</span>
+            <span class="field-hint" style="color: var(--accent-color); font-weight: 500; margin-top: 4px;">
+              ⚠️ <strong>Required:</strong> You must open your bot in Telegram and click <strong>Start</strong> (or send <code>/start</code>) before it can message you.
+            </span>
+          </div>
+
+          <div class="telegram-actions">
+            <button id="btn-test-telegram" class="btn btn-secondary">Test Connection</button>
+            <button id="btn-clear-telegram" class="btn btn-danger-text">Clear Credentials</button>
+          </div>
+          <div id="telegram-test-result" class="test-result-box hidden"></div>
+        </div>
+      </section>
+
+      <!-- Notifications & Retention -->
+      <section class="settings-card">
+        <h2>Preferences & Storage</h2>
+
+        <div class="form-group checkbox-group">
+          <label class="switch-label">
+            <input type="checkbox" id="check-browser-notifs">
+            <span class="switch-text">Enable Chrome desktop notifications on state transition</span>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <label for="select-retention">Event History Retention Limit</label>
+          <select id="select-retention">
+            <option value="200">200 events</option>
+            <option value="500">500 events</option>
+            <option value="1000" selected>1,000 events (Recommended)</option>
+            <option value="2500">2,500 events</option>
+            <option value="5000">5,000 events</option>
+          </select>
+        </div>
+
+        <div class="storage-actions">
+          <button id="btn-clear-history" class="btn btn-danger">Clear All History</button>
+        </div>
+      </section>
+
+      <!-- Bottom Save Action Bar -->
+      <div class="action-bar">
+        <button id="btn-save-all" class="btn btn-primary btn-large">Save All Settings</button>
+      </div>
+    </main>
+  </div>
+
+  <script src="settings.js" type="module"></script>
+</body>
+</html>

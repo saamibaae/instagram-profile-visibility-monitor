@@ -1,0 +1,16 @@
+[Unit]
+Description=Instagram Profile Visibility Monitor Standalone Daemon
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=%h/Instagram
+ExecStart=/usr/bin/node daemon/cli.js start --foreground
+Restart=on-failure
+RestartSec=10
+TimeoutStopSec=15
+StandardOutput=append:%h/Instagram/data/daemon.log
+StandardError=append:%h/Instagram/data/daemon.log
+
+[Install]
+WantedBy=default.target

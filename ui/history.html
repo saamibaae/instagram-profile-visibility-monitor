@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Event History — Instagram Visibility Monitor</title>
+  <link rel="stylesheet" href="history.css">
+</head>
+<body>
+  <div class="history-layout">
+    <header class="history-header">
+      <div class="header-content">
+        <img src="../assets/icons/icon48.png" alt="Logo" class="logo">
+        <div>
+          <h1>Observation History</h1>
+          <p class="subtitle" id="account-subtitle">Account: @instagram</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <button id="btn-export-csv" class="btn btn-secondary">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="7 10 12 15 17 10"></polyline>
+            <line x1="12" y1="15" x2="12" y2="3"></line>
+          </svg>
+          Export CSV
+        </button>
+        <a href="settings.html" class="nav-link">Settings →</a>
+      </div>
+    </header>
+
+    <!-- Stats Summary Row -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <span class="stat-num" id="stat-total">0</span>
+        <span class="stat-label">Total Checks</span>
+      </div>
+      <div class="stat-card stat-visible">
+        <span class="stat-num" id="stat-visible">0</span>
+        <span class="stat-label">Visible</span>
+      </div>
+      <div class="stat-card stat-unavailable">
+        <span class="stat-num" id="stat-unavailable">0</span>
+        <span class="stat-label">Unavailable</span>
+      </div>
+      <div class="stat-card stat-unknown">
+        <span class="stat-num" id="stat-unknown">0</span>
+        <span class="stat-label">Unknown</span>
+      </div>
+      <div class="stat-card stat-transitions">
+        <span class="stat-num" id="stat-transitions">0</span>
+        <span class="stat-label">Transitions</span>
+      </div>
+    </div>
+
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+      <div class="filter-group">
+        <label for="filter-state">State:</label>
+        <select id="filter-state">
+          <option value="ALL">All States</option>
+          <option value="VISIBLE">Visible Only</option>
+          <option value="UNAVAILABLE">Unavailable Only</option>
+          <option value="UNKNOWN">Unknown Only</option>
+        </select>
+      </div>
+
+      <div class="filter-group">
+        <label class="checkbox-filter">
+          <input type="checkbox" id="filter-transitions-only">
+          <span>Transitions Only</span>
+        </label>
+      </div>
+
+      <div class="filter-group search-group">
+        <input type="text" id="search-input" placeholder="Search reasons..." autocomplete="off">
+      </div>
+
+      <button id="btn-refresh" class="btn btn-icon" title="Refresh history" aria-label="Refresh">↻</button>
+    </div>
+
+    <!-- History Table -->
+    <main class="table-container">
+      <table class="history-table">
+        <thead>
+          <tr>
+            <th>Time (Asia/Dhaka)</th>
+            <th>Observation</th>
+            <th>Previous State</th>
+            <th>Result</th>
+            <th>Confidence</th>
+            <th>Duration</th>
+            <th>Reason</th>
+          </tr>
+        </thead>
+        <tbody id="history-tbody">
+          <tr>
+            <td colspan="7" class="empty-state">Loading observation records...</td>
+          </tr>
+        </tbody>
+      </table>
+    </main>
+
+    <footer class="history-footer">
+      <span id="footer-count">Showing 0 events</span>
+      <span class="disclaimer-note">
+        Note: Observed accessibility only. Observations do not verify actual account deactivation or backend status.
+      </span>
+    </footer>
+  </div>
+
+  <script src="history.js" type="module"></script>
+</body>
+</html>

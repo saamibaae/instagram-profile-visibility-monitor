@@ -1,0 +1,39 @@
+{
+  "name": "instagram-profile-visibility-monitor",
+  "version": "1.0.0",
+  "description": "Enterprise-grade headless daemon and observability system for monitoring Instagram profile visibility with Telegram alerts, fast-path evaluation, session import, and web dashboard.",
+  "type": "module",
+  "main": "background/service-worker.js",
+  "scripts": {
+    "test": "node --test tests/*.test.js",
+    "test:watch": "node --test --watch tests/*.test.js",
+    "gui": "node --expose-gc --max-old-space-size=64 --optimize-for-size daemon/server.js",
+    "target": "node daemon/cli.js target",
+    "check": "node daemon/cli.js check",
+    "schedule": "node daemon/cli.js schedule",
+    "pause": "node daemon/cli.js pause",
+    "resume": "node daemon/cli.js resume",
+    "login": "node daemon/cli.js login",
+    "start": "node daemon/cli.js start",
+    "start:unified": "node --expose-gc --max-old-space-size=64 --optimize-for-size daemon/server.js --with-scheduler",
+    "start:live": "node daemon/cli.js start --foreground",
+    "stop": "node daemon/cli.js stop",
+    "status": "node daemon/cli.js status",
+    "test:telegram": "node daemon/cli.js test:telegram",
+    "history": "node daemon/cli.js history",
+    "export": "node daemon/cli.js export",
+    "cli": "node daemon/cli.js"
+  },
+  "keywords": [
+    "chrome-extension",
+    "manifest-v3",
+    "instagram",
+    "visibility-monitor",
+    "telegram-bot"
+  ],
+  "author": "Ismam",
+  "license": "MIT",
+  "dependencies": {
+    "playwright": "^1.65.0"
+  }
+}
