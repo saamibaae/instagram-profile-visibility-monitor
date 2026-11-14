@@ -92,7 +92,7 @@ npm run status
 │   ├── run-background.vbs     # Windows silent background launcher (zero terminal window)
 │   └── instagram-monitor.service # Ubuntu systemd --user service unit
 │
-├── tests/                     # 101 unit and integration tests (100% pass rate)
+├── tests/                     # 120 unit, integration, and security tests (100% pass rate)
 │   ├── classifier.test.js
 │   ├── config-migration.test.js
 │   ├── daemon-browser.test.js
@@ -124,7 +124,7 @@ npm run status
     ├── UBUNTU_SETUP.md        # Chrome extension installation on Ubuntu 26.04 LTS
     ├── WINDOWS_DAEMON_SETUP.md# Standalone daemon background setup on Windows 11
     ├── UBUNTU_DAEMON_SETUP.md # Standalone daemon background setup on Ubuntu 26.04 LTS
-    └── TEST_RESULTS.md        # Test matrix (101 passing tests) and verification report
+    └── TEST_RESULTS.md        # Test matrix (120 passing tests) and verification report
 ```
 
 ---
@@ -160,7 +160,7 @@ curl http://localhost:3847/healthz
 
 ## Running Automated Tests
 
-The test suite runs natively using Node.js's built-in test runner (`node:test`) with zero external dependencies (**101 passing tests**):
+The test suite runs natively using Node.js's built-in test runner (`node:test`) with zero external dependencies (**120 passing tests**):
 
 ```bash
 npm test
