@@ -33,5 +33,8 @@ jobs:
       - name: Install Playwright Chromium dependencies
         run: npx playwright install --with-deps chromium
 
+      - name: Ensure runtime data directory exists
+        run: node -e "const fs = require('fs'); if (!fs.existsSync('data')) fs.mkdirSync('data', { recursive: true });"
+
       - name: Run Test Suite
         run: npm test

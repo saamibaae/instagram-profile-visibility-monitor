@@ -15,6 +15,8 @@ const MIGRATION_TEST_FILE = path.resolve('data/test_migration_config.json');
 const BACKUP_FILE = `${MIGRATION_TEST_FILE}.backup.json`;
 
 function cleanup() {
+  const dir = path.dirname(MIGRATION_TEST_FILE);
+  if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
   if (fs.existsSync(MIGRATION_TEST_FILE)) fs.unlinkSync(MIGRATION_TEST_FILE);
   if (fs.existsSync(BACKUP_FILE)) fs.unlinkSync(BACKUP_FILE);
 }

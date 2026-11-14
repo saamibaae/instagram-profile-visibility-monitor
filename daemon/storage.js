@@ -231,7 +231,11 @@ export function recordDaemonEventInMemory(event) {
 
   if (!memoryEventsCache) {
     // Seed from disk first if cache uninitialized
-    readDaemonEvents();
+    if (fs.existsSync(EVENTS_FILE)) {
+      readDaemonEvents();
+    } else {
+      memoryEventsCache = [];
+    }
   }
 
   if (memoryEventsCache) {
@@ -282,12 +286,17 @@ export function appendDaemonAuditEvent(eventType, details = {}, auditPath = AUDI
  * @returns {Array<object>}
  */
 export function readDaemonEvents(options = {}, eventsPath = EVENTS_FILE) {
-  if (!fs.existsSync(eventsPath)) return [];
   try {
     let rawEvents = [];
 
-    // For default EVENTS_FILE, use in-memory cache when file is unchanged
-    if (eventsPath === EVENTS_FILE) {
+    if (!fs.existsSync(eventsPath)) {
+      if (eventsPath === EVENTS_FILE && memoryEventsCache && memoryEventsCache.length > 0) {
+        rawEvents = memoryEventsCache;
+      } else {
+        return [];
+      }
+    } else if (eventsPath === EVENTS_FILE) {
+      // For default EVENTS_FILE, use in-memory cache when file is unchanged
       try {
         const stats = fs.statSync(eventsPath);
         if (memoryEventsCache && stats.mtimeMs === lastEventsFileMtime && stats.size === lastEventsFileSize) {
