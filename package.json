@@ -22,7 +22,16 @@
     "test:telegram": "node daemon/cli.js test:telegram",
     "history": "node daemon/cli.js history",
     "export": "node daemon/cli.js export",
-    "cli": "node daemon/cli.js"
+    "cli": "node daemon/cli.js",
+    "rust:build": "cargo build --manifest-path rust-monitor/Cargo.toml --release",
+    "rust:start": "cargo run --manifest-path rust-monitor/Cargo.toml --release -- start --foreground",
+    "rust:gui": "cargo run --manifest-path rust-monitor/Cargo.toml --release -- gui",
+    "rust:status": "cargo run --manifest-path rust-monitor/Cargo.toml --release -- status",
+    "rust:check": "cargo run --manifest-path rust-monitor/Cargo.toml --release -- check",
+    "rust:test:telegram": "cargo run --manifest-path rust-monitor/Cargo.toml --release -- test:telegram",
+    "rust:history": "cargo run --manifest-path rust-monitor/Cargo.toml --release -- history",
+    "test:rust": "cargo test --manifest-path rust-monitor/Cargo.toml",
+    "test:all": "npm test && npm run test:rust"
   },
   "keywords": [
     "chrome-extension",

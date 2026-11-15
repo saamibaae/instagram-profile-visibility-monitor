@@ -7,6 +7,7 @@ import {
   resetDegradationTracker,
   executeTelegramCommand
 } from '../daemon/telegram-bot.js';
+import { loadDaemonConfig, saveDaemonConfig } from '../daemon/config.js';
 import { ObservationState, Confidence } from '../lib/constants.js';
 
 test('TelegramBot: parseTelegramCommand parses supported commands with arguments', () => {
@@ -73,22 +74,27 @@ test('TelegramBot: checkSilentDegradation detects consecutive failure threshold 
 });
 
 test('TelegramBot: executeTelegramCommand handles supported commands accurately', async () => {
-  const helpReply = await executeTelegramCommand('help');
-  assert.match(helpReply, /Available Commands/);
+  const originalConfig = loadDaemonConfig();
+  try {
+    const helpReply = await executeTelegramCommand('help');
+    assert.match(helpReply, /Available Commands/);
 
-  const statusReply = await executeTelegramCommand('status');
-  assert.match(statusReply, /System Telemetry & Status/);
+    const statusReply = await executeTelegramCommand('status');
+    assert.match(statusReply, /System Telemetry & Status/);
 
-  const targetReply = await executeTelegramCommand('target', 'valid_user');
-  assert.match(targetReply, /Target Profile Updated/);
-  assert.match(targetReply, /@valid_user/);
+    const targetReply = await executeTelegramCommand('target', 'valid_user');
+    assert.match(targetReply, /Target Profile Updated/);
+    assert.match(targetReply, /@valid_user/);
 
-  const invalidTargetReply = await executeTelegramCommand('target', 'bad!user#name');
-  assert.match(invalidTargetReply, /Invalid Handle/);
+    const invalidTargetReply = await executeTelegramCommand('target', 'bad!user#name');
+    assert.match(invalidTargetReply, /Invalid Handle/);
 
-  const pauseReply = await executeTelegramCommand('pause');
-  assert.match(pauseReply, /Monitoring Paused/);
+    const pauseReply = await executeTelegramCommand('pause');
+    assert.match(pauseReply, /Monitoring Paused/);
 
-  const resumeReply = await executeTelegramCommand('resume');
-  assert.match(resumeReply, /Monitoring Resumed/);
+    const resumeReply = await executeTelegramCommand('resume');
+    assert.match(resumeReply, /Monitoring Resumed/);
+  } finally {
+    saveDaemonConfig(originalConfig);
+  }
 });
