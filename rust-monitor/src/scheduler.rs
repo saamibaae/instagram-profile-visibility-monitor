@@ -11,7 +11,7 @@ use crate::fastpath::evaluate_http_fast_path;
 use crate::state_machine::{
     process_observation, Confidence, Observation, ObservationState, ProcessObservationResult,
 };
-use crate::storage::{append_event, load_state, save_state, StoredEventRecord};
+use crate::storage::{append_event, load_state, save_state, save_state_smart, StoredEventRecord};
 use crate::telegram::send_telegram_alert;
 
 pub async fn run_observation_cycle(
@@ -109,7 +109,9 @@ pub async fn run_scheduler_loop(shutdown_signal: Arc<AtomicBool>) {
 
     loop {
         if shutdown_signal.load(Ordering::Relaxed) {
-            tracing::info!("Scheduler received shutdown signal. Exiting loop.");
+            tracing::info!("Scheduler received shutdown signal. Flushing state and exiting loop.");
+            let final_state = load_state();
+            save_state_smart(&final_state, true);
             break;
         }
 

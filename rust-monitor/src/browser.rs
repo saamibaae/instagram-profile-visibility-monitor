@@ -1,4 +1,4 @@
-use std::path::{Path, PathBuf};
+use std::path::PathBuf;
 use std::process::Command;
 use std::time::Instant;
 use crate::classifier::{classify_page_snapshot, extract_snapshot_from_html};
@@ -31,17 +31,22 @@ pub async fn observe_profile_with_browser(
     let chrome_bin = resolve_chrome_executable()
         .ok_or_else(|| "Could not locate Google Chrome or Edge executable on this system".to_string())?;
 
-    let existing_profile = resolve_browser_profile_dir();
     let target_url = &config.target_url;
 
-    // Ephemeral scratch profile to prevent lock contention
-    let scratch_profile = existing_profile
-        .parent()
-        .unwrap_or_else(|| Path::new("data"))
-        .join("rust_browser_profile");
+    // Ephemeral scratch profile in OS temp directory to eliminate SSD write wear on project disk
+    let scratch_profile = std::env::temp_dir().join(format!("rust_monitor_chrome_{}", std::process::id()));
     let _ = std::fs::create_dir_all(&scratch_profile);
 
-    // Launch headless Chrome to dump hydrated DOM
+    // Ephemerally copy secondary account cookies if available without profile lock contention
+    let existing_profile = resolve_browser_profile_dir();
+    let source_cookie_file = existing_profile.join("Default").join("Network").join("Cookies");
+    if source_cookie_file.exists() {
+        let dest_cookie_dir = scratch_profile.join("Default").join("Network");
+        let _ = std::fs::create_dir_all(&dest_cookie_dir);
+        let _ = std::fs::copy(&source_cookie_file, dest_cookie_dir.join("Cookies"));
+    }
+
+    // Launch headless Chrome to dump hydrated DOM with aggressive disk/RAM optimizations
     let output = Command::new(&chrome_bin)
         .arg("--headless=new")
         .arg("--disable-gpu")
@@ -51,11 +56,24 @@ pub async fn observe_profile_with_browser(
         .arg("--no-default-browser-check")
         .arg("--disable-extensions")
         .arg("--disable-background-networking")
+        .arg("--disable-component-update")
+        .arg("--disable-default-apps")
+        .arg("--disable-sync")
+        .arg("--mute-audio")
+        .arg("--disk-cache-size=1")
+        .arg("--media-cache-size=1")
+        .arg("--disable-gpu-shader-disk-cache")
+        .arg("--disable-application-cache")
+        .arg("--blink-settings=imagesEnabled=false")
         .arg("--dump-dom")
         .arg(format!("--user-data-dir={}", scratch_profile.display()))
         .arg(target_url)
-        .output()
-        .map_err(|e| format!("Failed to spawn headless browser: {}", e))?;
+        .output();
+
+    // Clean up ephemeral temp directory immediately
+    let _ = std::fs::remove_dir_all(&scratch_profile);
+
+    let output = output.map_err(|e| format!("Failed to spawn headless browser: {}", e))?;
 
     let duration_ms = start.elapsed().as_millis();
 

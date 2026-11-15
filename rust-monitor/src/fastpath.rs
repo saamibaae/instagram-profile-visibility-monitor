@@ -1,10 +1,26 @@
-use std::time::Instant;
+use std::sync::OnceLock;
+use std::time::{Duration, Instant};
 use chrono::Utc;
 use reqwest::header::{HeaderMap, HeaderValue, ACCEPT, ACCEPT_LANGUAGE, COOKIE, USER_AGENT};
 use crate::classifier::{classify_page_snapshot, extract_snapshot_from_html};
 use crate::config::MonitorConfig;
 use crate::session::get_session_cookies_header;
 use crate::state_machine::{Confidence, Observation, ObservationState};
+
+static HTTP_CLIENT: OnceLock<reqwest::Client> = OnceLock::new();
+
+pub fn get_http_client() -> &'static reqwest::Client {
+    HTTP_CLIENT.get_or_init(|| {
+        reqwest::Client::builder()
+            .timeout(Duration::from_millis(6000))
+            .redirect(reqwest::redirect::Policy::none())
+            .pool_idle_timeout(Duration::from_secs(90))
+            .pool_max_idle_per_host(2)
+            .tcp_keepalive(Duration::from_secs(60))
+            .build()
+            .unwrap_or_else(|_| reqwest::Client::new())
+    })
+}
 
 pub struct FastPathResult {
     pub fallback_required: bool,
@@ -15,22 +31,7 @@ pub struct FastPathResult {
 
 pub async fn evaluate_http_fast_path(config: &MonitorConfig) -> FastPathResult {
     let start = Instant::now();
-    let client = reqwest::Client::builder()
-        .timeout(std::time::Duration::from_millis(6000))
-        .redirect(reqwest::redirect::Policy::none())
-        .build();
-
-    let client = match client {
-        Ok(c) => c,
-        Err(e) => {
-            return FastPathResult {
-                fallback_required: true,
-                observation: None,
-                check_duration_ms: start.elapsed().as_millis(),
-                reason: format!("Failed to build HTTP client: {}", e),
-            };
-        }
-    };
+    let client = get_http_client();
 
     let mut headers = HeaderMap::new();
     headers.insert(

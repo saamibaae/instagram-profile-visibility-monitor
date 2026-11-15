@@ -57,7 +57,7 @@ impl std::fmt::Display for TransitionType {
     }
 }
 
-#[derive(Debug, Clone, Serialize, Deserialize)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct StateMachineState {
     pub monitoring_enabled: bool,
     pub current_observation: ObservationState,
